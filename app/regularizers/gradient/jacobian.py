@@ -1,4 +1,4 @@
-class Jacobian_Regularizer(nn.Module):
+class JacobianRegularizer(nn.Module):
     def __init__(self, model):
         super().__init__()
         self.model = model

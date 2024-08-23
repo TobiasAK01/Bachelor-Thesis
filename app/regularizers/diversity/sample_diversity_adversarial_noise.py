@@ -1,4 +1,4 @@
-class SampleDiverstiyAdversarial(nn.Module):
+class SampleDiverstiyAdversarialNoise(nn.Module):
 
     def __init__(self, model, eps, device):
         super().__init__()
