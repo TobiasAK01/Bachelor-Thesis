@@ -1,4 +1,8 @@
-class NegativeCorrelationNC(nn.Module):
+import torch
+from torch import nn
+import torch.nn.functional as f
+
+class NegativeCorrelationNoneCorrectClasses(nn.Module):
     def __init__(self, device, model):
         super().__init__()
         self.device = device
@@ -8,7 +12,7 @@ class NegativeCorrelationNC(nn.Module):
         torch.cuda.empty_cache()
 
         pred = self.model(imgs)
-        outputs = [F.softmax(estimator(imgs), dim=1) for estimator in self.model.models]
+        outputs = [f.softmax(estimator(imgs), dim=1) for estimator in self.model.models]
 
         # empty tensor of size batchsize x C-1 for storing y_k's
         pred_without_k = torch.empty((pred.size(dim=0), pred.size(dim=1) - 1), device=self.device)
@@ -23,10 +27,10 @@ class NegativeCorrelationNC(nn.Module):
             label_index = labels[i].item()
 
             # store y_k
-            pred_without_k[i] = F.softmax(torch.cat((pred[i][0:label_index], pred[i][label_index + 1:]), dim=0), dim=0)
+            pred_without_k[i] = f.softmax(torch.cat((pred[i][0:label_index], pred[i][label_index + 1:]), dim=0), dim=0)
 
             for j in range(len(outputs)):
-                output_without_k[j][i] = F.softmax(
+                output_without_k[j][i] = f.softmax(
                     torch.cat((outputs[j][i][0:label_index], outputs[j][i][label_index + 1:]), dim=0), dim=0)
 
         neg_corr = 0

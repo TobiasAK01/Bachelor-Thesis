@@ -1,3 +1,8 @@
+import torch
+from torch import nn
+import torch.nn.functional as f
+
+
 class GradientIndependence(nn.Module):
     def __init__(self, model):
         super().__init__()
@@ -16,7 +21,7 @@ class GradientIndependence(nn.Module):
 
             # Flatten and normalize the gradients
             flattened_gradients = torch.flatten(gradients, start_dim=1)
-            normalized_gradients = F.normalize(flattened_gradients, p=2, dim=1, eps=1e-12)
+            normalized_gradients = f.normalize(flattened_gradients, p=2, dim=1, eps=1e-12)
             estimators_gradients.append(normalized_gradients)
 
         # Stack the normalized gradients of all estimators

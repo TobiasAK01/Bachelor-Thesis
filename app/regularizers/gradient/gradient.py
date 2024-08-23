@@ -1,3 +1,6 @@
+import torch
+from torch import nn
+
 class GradientRegularizer(nn.Module):
     def __init__(self, model):
         super().__init__()

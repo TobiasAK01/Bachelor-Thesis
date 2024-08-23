@@ -1,3 +1,6 @@
+import torch
+from torch import nn
+
 class NegativeCorrelation(nn.Module):
     def __init__(self, model):
         super().__init__()

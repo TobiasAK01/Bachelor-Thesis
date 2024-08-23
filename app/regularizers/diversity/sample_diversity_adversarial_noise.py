@@ -1,3 +1,11 @@
+import torch
+import torchattacks
+from torch import nn
+import torch.nn.functional as f
+
+from app.adv_attacks.attacks import computePerputation
+
+
 class SampleDiverstiyAdversarialNoise(nn.Module):
 
     def __init__(self, model, eps, device):
@@ -20,12 +28,12 @@ class SampleDiverstiyAdversarialNoise(nn.Module):
         # compute pred on adv noise per model
         output = []
         for estimator in self.model.models:
-            output.append(F.softmax(estimator(adv_noise), dim=1))
+            output.append(f.softmax(estimator(adv_noise), dim=1))
 
         # compute logit and normalize to length one per output
         norm_logit_output = []
         for i in output:
-            norm_logit_output.append(F.normalize(torch.logit(i, eps=1e-6), p=2, dim=1, eps=1e-12))
+            norm_logit_output.append(f.normalize(torch.logit(i, eps=1e-6), p=2, dim=1, eps=1e-12))
 
         matrix_T = torch.stack(norm_logit_output, dim=1)
         matrix = torch.transpose_copy(matrix_T, dim0=1, dim1=2)

@@ -1,11 +1,15 @@
-class Chi_Square_Distance(nn.Module):
+import torch
+from torch import nn
+import torch.nn.functional as f
+
+class ChiSquareDistance(nn.Module):
     def __init__(self, model):
         super().__init__()
         self.model = model
 
     def forward(self, labels, imgs):
         torch.cuda.empty_cache()
-        outputs = [F.softmax(estimator(imgs), dim=1) for estimator in self.model.models]
+        outputs = [f.softmax(estimator(imgs), dim=1) for estimator in self.model.models]
 
         M = len(outputs)
         factor = 1 / (M * (M - 1))
